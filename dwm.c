@@ -187,6 +187,8 @@ static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg);
+static void halt();
+static void reboot();
 static Monitor *recttomon(int x, int y, int w, int h);
 static void resize(Client *c, int x, int y, int w, int h, int interact);
 static void resizeclient(Client *c, int x, int y, int w, int h);
@@ -1249,6 +1251,52 @@ void
 quit(const Arg *arg)
 {
 	running = 0;
+}
+
+void
+halt(void)
+{
+    pid_t halt_pid;
+
+    if((halt_pid = fork()) == 0)
+        execlp("/usr/bin/shutdown", "/usr/bin/shutdown", "-h", "now", NULL);
+
+    if(halt_pid == -1)
+        exit(EXIT_FAILURE);
+
+    int halt_status;
+    waitpid(halt_pid, &halt_status, 0);
+
+    if(!WIFEXITED(halt_status))
+        exit(EXIT_FAILURE);
+
+    if(WEXITSTATUS(halt_status))
+        exit(EXIT_FAILURE);
+
+    running = 0;
+}
+
+void
+reboot(void)
+{
+    pid_t reboot_pid;
+
+    if((reboot_pid = fork()) == 0)
+        execlp("/usr/bin/shutdown", "/usr/bin/shutdown", "-r", "now", NULL);
+
+    if(reboot_pid == -1)
+        exit(EXIT_FAILURE);
+
+    int reboot_status;
+    waitpid(reboot_pid, &reboot_status, 0);
+
+    if(!WIFEXITED(reboot_status))
+        exit(EXIT_FAILURE);
+
+    if(WEXITSTATUS(reboot_status))
+        exit(EXIT_FAILURE);
+
+    running = 0;
 }
 
 Monitor *
