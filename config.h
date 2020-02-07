@@ -56,17 +56,19 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* Component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", color_black, "-nf", color_white, "-sb", color_black, "-sf", color_green, NULL };
 static const char *termcmd[]  = { "urxvt", NULL };
-static const char *scrotcmd[]  = { "scrot", "-e", "mv $f ~/image/scrot/", NULL };
+static const char *sbacklightupcmd[] = { "sbacklight", "+", NULL };
+static const char *sbacklightdowncmd[] = { "sbacklight", "-", NULL };
+static const char *slockcmd[] = { "slock", NULL};
 static const char *mutecmd[] = { "amixer", "-q", "sset", "Master", "toggle", NULL };
-static const char *kbacklightupcmd[] = { "sbacklight", "+", NULL };
-static const char *kbacklightdowncmd[] = { "sbacklight", "-", NULL };
 static const char *voldowncmd[] = { "amixer", "-q", "sset", "Master", "3-", "unmute", NULL };
 static const char *volupcmd[] = { "amixer", "-q", "sset", "Master", "3+", "unmute", NULL };
+static const char *scrotcmd[]  = { "scrot", "-e", "mv $f ~/image/scrot/", NULL };
 
 static Key keys[] = {
 	/* modifier                     key                         function        argument */
-    { 0,                            XF86XK_MonBrightnessDown,   spawn,          {.v = kbacklightdowncmd } },
-    { 0,                            XF86XK_MonBrightnessUp,     spawn,          {.v = kbacklightupcmd } },
+    { 0,                            XF86XK_ScreenSaver,         spawn,          {.v = slockcmd } },
+    { 0,                            XF86XK_MonBrightnessDown,   spawn,          {.v = sbacklightdowncmd } },
+    { 0,                            XF86XK_MonBrightnessUp,     spawn,          {.v = sbacklightupcmd } },
     { 0,                            XF86XK_AudioMute,           spawn,          {.v = mutecmd } },
     { 0,                            XF86XK_AudioLowerVolume,    spawn,          {.v = voldowncmd } },
     { 0,                            XF86XK_AudioRaiseVolume,    spawn,          {.v = volupcmd } },
